@@ -4,9 +4,26 @@ package com.globalhell.mysqliteproject.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Note implements Parcelable {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+
+@Entity(tableName = "notes")
+public class Note implements Parcelable{
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo(name = "title")
     private String tittle;
+
+    @ColumnInfo(name = "content")
     private String content;
+
+
+    @ColumnInfo(name = "timestamp")
     private String timestamp;
 
 
@@ -16,27 +33,16 @@ public class Note implements Parcelable {
         this.timestamp = timestamp;
     }
 
+    @Ignore
     public Note(){
-
     }
 
 
     protected Note(Parcel in) {
+        id = in.readInt();
         tittle = in.readString();
         content = in.readString();
         timestamp = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(tittle);
-        dest.writeString(content);
-        dest.writeString(timestamp);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -50,6 +56,14 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTittle() {
         return tittle;
@@ -78,9 +92,23 @@ public class Note implements Parcelable {
     @Override
     public String toString() {
         return "Note{" +
-                "tittle='" + tittle + '\'' +
+                "id=" + id +
+                ", tittle='" + tittle + '\'' +
                 ", content='" + content + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(tittle);
+        parcel.writeString(content);
+        parcel.writeString(timestamp);
     }
 }
